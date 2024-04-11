@@ -24,6 +24,15 @@ while [[ -z "$chatid" ]]; do
         unset chatid
     fi
 done
+#Proxy
+# گرفتن آدرس پروکسی تلگرام برای سرور ایران
+while [[ -z "$proxy" ]]; do
+    echo "Telegram Proxy (http://user:pass@host:port) : "
+    read -r proxy
+    if [[ -z "$proxy" ]]; then
+        echo "Invalid input. Proxy cannot be empty."
+    fi
+done
 
 # Caption
 # گرفتن عنوان برای فایل پشتیبان و ذخیره آن در متغیر caption
@@ -215,7 +224,7 @@ cat > "/root/ac-backup-${xmh}.sh" <<EOL
 rm -rf /root/ac-backup-${xmh}.zip
 $ZIP
 echo -e "$comment" | zip -z /root/ac-backup-${xmh}.zip
-curl -F chat_id="${chatid}" -F caption=\$'${caption}' -F parse_mode="HTML" -F document=@"/root/ac-backup-${xmh}.zip" https://api.telegram.org/bot${tk}/sendDocument
+curl -x ${proxy} -F chat_id="${chatid}" -F caption=\$'${caption}' -F parse_mode="HTML" -F document=@"/root/ac-backup-${xmh}.zip" https://api.telegram.org/bot${tk}/sendDocument
 EOL
 
 
